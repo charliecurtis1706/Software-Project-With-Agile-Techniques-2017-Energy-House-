@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/Tarantno/Documents/Java Folder/EnergyHouse/lib/curvesapi-1.04.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tarantno/Documents/Java Folder/EnergyHouse/lib/poi-3.17.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tarantno/Documents/Java Folder/EnergyHouse/lib/poi-examples-3.17.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tarantno/Documents/Java Folder/EnergyHouse/lib/poi-excelant-3.17.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tarantno/Documents/Java Folder/EnergyHouse/lib/poi-ooxml-3.17.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tarantno/Documents/Java Folder/EnergyHouse/lib/poi-ooxml-schemas-3.17.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tarantno/Documents/Java Folder/EnergyHouse/lib/poi-scratchpad-3.17.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tarantno/Documents/Java Folder/EnergyHouse/lib/sqlite-jdbc-3.21.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tarantno/Documents/Java Folder/EnergyHouse/lib/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
