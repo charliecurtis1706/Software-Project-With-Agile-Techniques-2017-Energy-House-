@@ -16,23 +16,31 @@ import sun.misc.BASE64Encoder;
 
 public class Model {
         static boolean successfulLogin = false; 
+        static String userNo = null;
 }
 
  class Login {
-		Connection connection;
-		Statement statement;
+		private static Connection connection = null;
+		static Statement statement;
 		ResultSet resultSet;
 		String username;
-		String password;	
+		String password;
 		public Login(String username, String password)
 		{
 			this.username = username;
 			this.password = password;
-			connection = null;
 			loadMySQLDriver();
 			setUpConnection();
 			signIntoApplication();
 		}
+	
+		public static Connection getConn() throws Exception {
+		    if(connection == null){
+		    Class.forName("org.sqlite.JDBC").newInstance();
+		    connection = DriverManager.getConnection("jdbc:sqlite:database.db");
+		    }
+		    return connection;
+		    }
 		
 		public Login() //no parameter Constructor.
 		{
@@ -65,7 +73,7 @@ public class Model {
 		public void loadMySQLDriver()
 		{
 			try{
-			Class.forName("org.sqlite.JDBC").newInstance();	
+			getConn();
 			System.out.println("Load Success");
 			}
 			catch (Exception ex)
@@ -97,13 +105,14 @@ public class Model {
 		{
 			try{
 				PreparedStatement preparedStatement = connection.prepareStatement(
-			            "insert into users values (?, ?);");
-				preparedStatement.setString(1, username); //username and password placeholders.
+			            "insert into users values (null,?, ?);");
+				preparedStatement.setString(1, username);
 				preparedStatement.setString(2, encryptPassword(password,"SHA-1","UTF-16"));
 				preparedStatement.addBatch();
 				connection.setAutoCommit(false);
 				preparedStatement.executeBatch();
 			    connection.setAutoCommit(true);
+			   // Model.userNo = 
 			System.out.println("Added Success");
 			}
 			catch (Exception ex)
@@ -117,14 +126,13 @@ public class Model {
 		{
 			try
 			{
-				connection = DriverManager.getConnection("jdbc:sqlite:database.db"); // Connects to the SQLite 
 				statement = connection.createStatement();
 				if(statement.executeQuery("SELECT * FROM users;") == null)
 				{
 					System.out.println("Null. Created default user; username:admin password:password");
 					statement.executeUpdate("DROP TABLE if exists users;");
-					statement.executeUpdate("CREATE TABLE users (username, password);");
-					PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users values(?, ?);");
+					statement.executeUpdate("CREATE TABLE users (userid int AUTO_INCREMENT,username varchar(255), password varchar(255), PRIMARY KEY(userid));");
+					PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users values(null,?, ?);");
 					preparedStatement.setString(1, "admin");
 					preparedStatement.setString(2, encryptPassword("password","SHA-1","UTF-16"));
 					preparedStatement.addBatch();
@@ -133,16 +141,19 @@ public class Model {
 				    connection.setAutoCommit(true);
 				}
 				System.out.println("Database connected!");
-			      /* ResultSet resultSet = statement.executeQuery("SELECT * FROM users;");
+			      ResultSet resultSet = statement.executeQuery("SELECT * FROM users;");
 			        while (resultSet.next()) {
-			            System.out.println("username = " + resultSet.getString("username"));
+			        	Model.userNo = resultSet.getString("userid");
+			        	//System.out.println("username = " + resultSet.getString("userid"));
+			            System.out.println("username = " + resultSet.getString("username")+Model.userNo);
 			            System.out.println("password = " + resultSet.getString("password"));
 			        }
-			        resultSet.close();
+			       // resultSet.close();
+			      //  connection.close();
 			     // NEEDED BUT NEEEDS ADAPTING FOR PULLING USER'S INFORMATION WHEN LOADING PREVIOUS DATA
 			        //connection.close();
 			       //  * 
-			         //*/
+			         //
 			}
 			catch(SQLException ex)
 			{
@@ -150,9 +161,32 @@ public class Model {
 				  System.out.println("SQLState: " + ex.getSQLState());
 				  System.out.println("VendorError: " + ex.getErrorCode());
 			}
+			
+		}
+		/*public static String getNextUserNo()
+		{
+			try
+			{
+				statement = connection.createStatement();
+			      ResultSet resultSet = statement.executeQuery("SELECT * FROM users;");
+			        while (resultSet.next()) {
+			        	Model.userNo = resultSet.getString("userid");
+			            System.out.println("username = " + resultSet.getString("username")+Model.userNo);
+			            System.out.println("password = " + resultSet.getString("password"));
+			        }
+			}
+			catch(SQLException ex)
+			{
+				  System.out.println("SQLException: " + ex.getMessage());
+				  System.out.println("SQLState: " + ex.getSQLState());
+				  System.out.println("VendorError: " + ex.getErrorCode());
+			}
+			int nextNumberInt = Integer.parseInt(Model.userNo) + 1;
+			String nextNumberString = Integer.toString(nextNumberInt);
+			return nextNumberString;
 		}
 
-
+*/
 
 	
 }

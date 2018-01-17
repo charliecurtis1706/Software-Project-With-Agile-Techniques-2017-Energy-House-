@@ -70,6 +70,7 @@ public class View {
 	Scene scene3;
 	Canvas canvas3;
 	Button importDataButton;
+	Button deleteDataButton;
 	Button calculateButton;
 	ComboBox<String> comboBox;
 	Text calculatorTitle;
@@ -78,23 +79,28 @@ public class View {
 	Pane root4;
 	Scene scene4;
 	Canvas canvas4;
+	Text createAccount;
+	Text fillout;
 
 	Stage window;
 
 	Button back;
 	Button back1;
 	Text name;
+	Text surname;
+	Text email;
 	TextField firstNameTextFieldSignup;
 	TextField surnameTextFieldSignup;
 	Label usernameLabelSignup;
 	PasswordField passwordFieldSignup;
 	PasswordField passwordFieldConfirmSignup;
 	Text password;
+	Text passwordConfirm;
 	ComboBox<String> comboBox1;
 	Image background2;
 	Button submitData;
 	Alert alertConfirmation;
-
+	Button quitButton3;
 	public View(Pane root) {
 
 		super();
@@ -159,7 +165,7 @@ public class View {
 		titleText2 = new Text();
 		titleText2.setText("Please log in.");
 		titleText2.setLayoutX(25);
-		titleText2.setLayoutY(200);
+		titleText2.setLayoutY(220);
 		titleText2.setFont(Font.font("Calibri", FontWeight.BOLD, FontPosture.REGULAR, 30));
 		titleText2.setFill(Color.CRIMSON);
 		root2.getChildren().add(titleText2);
@@ -194,7 +200,7 @@ public class View {
 
 		createAccountButton = new Button("Create Account");
 		createAccountButton.setLayoutX(25);
-		createAccountButton.setLayoutY(675);
+		createAccountButton.setLayoutY(695);
 		createAccountButton.setPrefSize(185, 50);
 		root2.getChildren().add(createAccountButton);
 
@@ -212,13 +218,13 @@ public class View {
 
 		quitButton2 = new Button("Quit");
 		quitButton2.setLayoutX(800);
-		quitButton2.setLayoutY(675);
+		quitButton2.setLayoutY(695);
 		quitButton2.setPrefSize(185, 50);
 		root2.getChildren().add(quitButton2);
 
 		prevScreen = new Button("Back to previous screen");
 		prevScreen.setLayoutX(600);
-		prevScreen.setLayoutY(675);
+		prevScreen.setLayoutY(695);
 		prevScreen.setPrefSize(185, 50);
 		root2.getChildren().add(prevScreen);
 
@@ -233,7 +239,7 @@ public class View {
 
 		calculatorTitle = new Text("Calculator");
 		calculatorTitle.setLayoutX(25);
-		calculatorTitle.setLayoutY(200);
+		calculatorTitle.setLayoutY(220);
 		calculatorTitle.setFont(Font.font("Calibri", FontWeight.BOLD, FontPosture.REGULAR, 30));
 		calculatorTitle.setFill(Color.CRIMSON);
 		root3.getChildren().add(calculatorTitle);
@@ -245,130 +251,153 @@ public class View {
 
 		importDataButton = new Button("Import File");
 		importDataButton.setLayoutX(25);
-		importDataButton.setLayoutY(225);
+		importDataButton.setLayoutY(245);
 		importDataButton.setPrefSize(185, 50);
 		root3.getChildren().add(importDataButton);
+		
+		deleteDataButton = new Button("Delete Data");
+		deleteDataButton.setLayoutX(250);
+		deleteDataButton.setLayoutY(245);
+		deleteDataButton.setPrefSize(185, 50);
+		deleteDataButton.setVisible(false);
+		root3.getChildren().add(deleteDataButton);
 
 		dropmenuLabel = new Label("Select Required Formula:");
 		dropmenuLabel.setLayoutX(25);
-		dropmenuLabel.setLayoutY(325);
+		dropmenuLabel.setLayoutY(320);
 		root3.getChildren().add(dropmenuLabel);
 
 		comboBox = new ComboBox<>();
 		comboBox.getItems().addAll("Air to Air", "Surface to Air", "Surface to Surface");
 		comboBox.setPromptText("Select required formula:");
 		comboBox.setLayoutX(25);
-		comboBox.setLayoutY(350);
+		comboBox.setLayoutY(345);
 		root3.getChildren().add(comboBox);
 
 		calculateButton = new Button("Calculate");
-		calculateButton.setLayoutX(800);
-		calculateButton.setLayoutY(675);
+		calculateButton.setLayoutX(600);
+		calculateButton.setLayoutY(635);
 		calculateButton.setPrefSize(185, 50);
 		root3.getChildren().add(calculateButton);
 		
-		back = new Button("Back");
+		quitButton2 = new Button("Quit");
+		quitButton2.setLayoutX(800);
+		quitButton2.setLayoutY(695);
+		quitButton2.setPrefSize(185, 50);
+		root3.getChildren().add(quitButton2);
+		
+		back = new Button("Back to previous screen");
 		back.setLayoutX(600);
-		back.setLayoutY(675);
+		back.setLayoutY(695);
 		back.setPrefSize(185, 50);
 		root3.getChildren().add(back);
 
 		////// SCENE4--------------------------------------
+
 
 		root4 = new Pane();
 		canvas4 = new Canvas(1024, 768);
 		scene4 = new Scene(root4, 1024, 768);
 		gc = canvas4.getGraphicsContext2D();
 		root4.getChildren().add(canvas4);
+		background = new Image(this.getClass().getResource("res/bg.png").toExternalForm());
+		gc.drawImage(background, 0, 0);
+		
+		logo = new Image(this.getClass().getResource("res/logo.png").toExternalForm());
+		gc.drawImage(logo, 25, 30, 190, 100);
+		energyHouse = new Image(this.getClass().getResource("res/energyHouseSign.png").toExternalForm());
+		gc.drawImage(energyHouse, 700, 20, 300, 150);
 
-		// background2= new
-		// Image(this.getClass().getResource("res/office.jpg").toExternalForm());
-		// gc.drawImage(background2, 0, 0);
-
-		Text createAccount = new Text("Create Account");
-		createAccount.setLayoutX(350);
-		createAccount.setLayoutY(80);
-		createAccount.setFont(Font.font("Calibri", FontWeight.BOLD, FontPosture.ITALIC, 40));
+		createAccount = new Text("Create Account");
+		createAccount.setLayoutX(25);
+		createAccount.setLayoutY(220);
+		createAccount.setFont(Font.font("Calibri", FontWeight.BOLD, FontPosture.REGULAR, 40));
 		createAccount.setFill(Color.BLACK);
 		root4.getChildren().add(createAccount);
 
-		Text fillout = new Text("Fill in the information below correctly in order to create your account.");
-		fillout.setLayoutX(350);
-		fillout.setLayoutY(120);
-		fillout.setFont(Font.font("Calibri", FontPosture.ITALIC, 14));
-		fillout.setFill(Color.BLACK);
+		fillout = new Text("Fill in the information below correctly in order to create your account.");
+		fillout.setLayoutX(25);
+		fillout.setLayoutY(245);
+		fillout.setFill(Color.CRIMSON);
 		root4.getChildren().add(fillout);
 
 		name = new Text("First Name");
-		name.setLayoutX(80);
-		name.setLayoutY(190);
+		name.setLayoutX(25);
+		name.setLayoutY(270);
 		name.setFont(Font.font("Calibri", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		name.setFill(Color.BLACK);
 		root4.getChildren().add(name);
 
 		firstNameTextFieldSignup = new TextField();
-		firstNameTextFieldSignup.setLayoutX(80);
-		firstNameTextFieldSignup.setLayoutY(200);
+		firstNameTextFieldSignup.setLayoutX(25);
+		firstNameTextFieldSignup.setLayoutY(280);
 		root4.getChildren().add(firstNameTextFieldSignup);
 
-		Text surname = new Text("Last Name");
-		surname.setLayoutX(80);
+		surname = new Text("Last Name");
+		surname.setLayoutX(300);
 		surname.setLayoutY(270);
 		surname.setFont(Font.font("Calibri", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		surname.setFill(Color.BLACK);
 		root4.getChildren().add(surname);
 
 		surnameTextFieldSignup = new TextField();
-		surnameTextFieldSignup.setLayoutX(80);
+		surnameTextFieldSignup.setLayoutX(300);
 		surnameTextFieldSignup.setLayoutY(280);
 		root4.getChildren().add(surnameTextFieldSignup);
 
-		Text email = new Text("Username");
-		email.setLayoutX(80);
-		email.setLayoutY(340);
+		email = new Text("Username");
+		email.setLayoutX(25);
+		email.setLayoutY(350);
 		email.setFont(Font.font("Calibri", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		email.setFill(Color.BLACK);
 		root4.getChildren().add(email);
 
 		usernameLabelSignup = new Label();
-		usernameLabelSignup.setLayoutX(80);
-		usernameLabelSignup.setLayoutY(350);
+		usernameLabelSignup.setLayoutX(25);
+		usernameLabelSignup.setLayoutY(360);
 		usernameLabelSignup.setText("auto-generated");
 		root4.getChildren().add(usernameLabelSignup);
 
 		password = new Text("Password");
-		password.setLayoutX(80);
+		password.setLayoutX(25);
 		password.setLayoutY(420);
 		password.setFont(Font.font("Calibri", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		password.setFill(Color.BLACK);
 		root4.getChildren().add(password);
 
-		passwordFieldSignup = new PasswordField(); passwordFieldSignup.setLayoutX(80);
+		passwordFieldSignup = new PasswordField();
+		passwordFieldSignup.setLayoutX(25);
 		passwordFieldSignup.setLayoutY(430);
 	    root4.getChildren().add(passwordFieldSignup);
 		 
-		Text passwordConfirm = new Text("Repeat Password");
-		passwordConfirm.setLayoutX(80);
-		passwordConfirm.setLayoutY(500);
+		passwordConfirm = new Text("Repeat Password");
+		passwordConfirm.setLayoutX(300);
+		passwordConfirm.setLayoutY(420);
 		passwordConfirm.setFont(Font.font("Calibri", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		passwordConfirm.setFill(Color.BLACK);
 		root4.getChildren().add(passwordConfirm);
 
 		passwordFieldConfirmSignup = new PasswordField();
-		passwordFieldConfirmSignup.setLayoutX(80);
-		passwordFieldConfirmSignup.setLayoutY(510);
+		passwordFieldConfirmSignup.setLayoutX(300);
+		passwordFieldConfirmSignup.setLayoutY(430);
 		root4.getChildren().add(passwordFieldConfirmSignup);
 
-		submitData = new Button("CREATE ACCOUNT");
-		submitData.setLayoutX(80);
-		submitData.setLayoutY(560);
-		submitData.setPrefSize(150, 50);
+		submitData = new Button("Create Account");
+		submitData.setLayoutX(25);
+		submitData.setLayoutY(500);
+		submitData.setPrefSize(185, 50);
 		root4.getChildren().add(submitData);
+		
+		quitButton3 = new Button("Quit");
+		quitButton3.setLayoutX(800);
+		quitButton3.setLayoutY(695);
+		quitButton3.setPrefSize(185, 50);
+		root4.getChildren().add(quitButton3);
 
-		back1 = new Button("Back");
-		back1.setLayoutX(800);
-		back1.setLayoutY(660);
-		back1.setPrefSize(150, 50);
+		back1 = new Button("Back to previous screen");
+		back1.setLayoutX(600);
+		back1.setLayoutY(695);
+		back1.setPrefSize(185, 50);
 		root4.getChildren().add(back1);
 		
 		alertConfirmation = new Alert(AlertType.CONFIRMATION);

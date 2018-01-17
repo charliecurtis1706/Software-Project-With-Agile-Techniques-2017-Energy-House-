@@ -6,6 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,6 +48,7 @@ public class Controller implements EventHandler {
 	int num = 1;
 	int count = 1;
 	Login login;
+	String userLoggedIn = "Unknown";
 
 	public Controller(Model model, View view) {
 		super();
@@ -57,7 +61,9 @@ public class Controller implements EventHandler {
 		this.view.prevScreen.setOnAction(this);
 		this.view.quitButton2.setOnAction(this);
 		this.view.importDataButton.setOnAction(this);
+		this.view.deleteDataButton.setOnAction(this);
 		this.view.calculateButton.setOnAction(this);
+		this.view.quitButton3.setOnAction(this);
 		this.view.submitData.setOnAction(this);
 		this.view.back.setOnAction(this);
 		this.view.back1.setOnAction(this);
@@ -103,28 +109,87 @@ public class Controller implements EventHandler {
 
 			fileName = fileDialogBox.getFile();
 			directoryPath = fileDialogBox.getDirectory();
+			
 
-			dataFile = new File(directoryPath, fileName);
-
+			dataFile = new File(directoryPath+fileName);
 			System.out.println(directoryPath + fileName);
+			
+
+		
+		//	FileOutputStream oFile = new FileOutputStream(yourFile, false); 
+			
 			try {
 
 				fis = new FileInputStream(new File(directoryPath + fileName));
+				File sourceFile = new File (directoryPath +"/EnergyHouse/"+userLoggedIn+"/TestData/"+fileName);
+				if (!sourceFile.exists()) {
+					sourceFile.getParentFile().mkdirs();
+					try {
+						sourceFile.createNewFile();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				try{
+					if(!sourceFile.exists())
+					{
+						Files.copy(dataFile.toPath(), sourceFile.toPath(),StandardCopyOption.COPY_ATTRIBUTES);
+					}
+					else
+					{
+						Files.copy(dataFile.toPath(), sourceFile.toPath(),StandardCopyOption.REPLACE_EXISTING);
+					}
 
+				}
+				catch(NoSuchFileException e)
+				{
+					e.printStackTrace();
+				}
+				catch(IOException e)
+				{
+					e.printStackTrace();
+				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
+			
+		}
+		else if (event.getSource() == this.view.deleteDataButton) 
+		{
+			String fileName = null;
+			JFrame mainWindow = new JFrame();
+			// use a Filedialog to select a file to read from
+			FileDialog fileDialogBox = new FileDialog(mainWindow, "Select data to delete", FileDialog.LOAD);
+			fileDialogBox.setVisible(true);
+
+			fileName = fileDialogBox.getFile();
+			directoryPath = fileDialogBox.getDirectory();
+			
+		
+			dataFile = new File(directoryPath+fileName);
+			System.out.println(directoryPath + fileName);				
+					if(dataFile.exists())
+					{
+						if(dataFile.getAbsolutePath().contains(userLoggedIn))
+						{
+						  dataFile.delete();
+						  view.infoMessage("Delete successful.");
+						}
+						else
+						{
+							view.errorMessage("Sorry you cannot delete a file that is not yours.");
+						}
+					}
 		}
 
 		else if (event.getSource() == this.view.calculateButton) // CALCULATE
-																	// BUTTON
-																	// =------------------=-=-=-=-=-=-=-=-=0=-0-=-0
+																	// BUTTON															// =------------------=-=-=-=-=-=-=-=-=0=-0-=-0
 		{
 
 			String formulaChosen = this.view.comboBox.getValue();
 			if (formulaChosen == null) {
 				System.out.println("You have to chose one formula");
-
 			} 
 			else if (formulaChosen.equals("Air to Air")) 
 			{
@@ -199,10 +264,10 @@ public class Controller implements EventHandler {
 					}
 				}
 				if (threeDaysPassed) {
-					File file = new File(directoryPath + fileName1 + extension);
-
+					File file = new File(directoryPath +"/EnergyHouse/"+userLoggedIn+"/Results/"+ fileName1 + extension);
+					
 					if (!file.exists()) {
-						// fileName1 = fileName1+num;
+						file.getParentFile().mkdirs();
 						try {
 							file.createNewFile();
 						} catch (IOException e) {
@@ -247,7 +312,9 @@ public class Controller implements EventHandler {
 						}
 
 						valuesAr.clear();
-						for (int j = 0; j < colNum; j++) {
+						int j =0;
+						for (; j < colNum; j++) {
+						
 							if (row.getCell(j).equals(null)) {
 								System.out.println("empty cells");
 							} else {
@@ -271,6 +338,7 @@ public class Controller implements EventHandler {
 								System.out.print(" " + valuesAr + " Array list ");
 							}
 						}
+					
 						try {
 							bw.write(cellStringValue);
 
@@ -301,10 +369,11 @@ public class Controller implements EventHandler {
 						}
 
 					} // End of outer for.
+
 					System.out.println(directoryPath + fileName1 + extension);
 					try {
 
-						fis = new FileInputStream(new File(directoryPath + fileName1 + extension));
+						fis = new FileInputStream(new File(directoryPath +"/EnergyHouse/"+userLoggedIn+"/Results/"+ fileName1 + extension));
 
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
@@ -328,25 +397,33 @@ public class Controller implements EventHandler {
 	
 			}
 
-		} else if (event.getSource() == this.view.submitData) {
+		}
+		else if (event.getSource() == this.view.quitButton3) 
+		{
+			System.exit(0);
+		}
+		else if (event.getSource() == this.view.submitData) {
 			count = 0;
 			boolean isFirstNameCorrect = isFieldCorrect(this.view.firstNameTextFieldSignup);
 			boolean isSurnameCorrect = isFieldCorrect(this.view.surnameTextFieldSignup);
 			boolean isPasswordsEqual = this.view.passwordFieldSignup.getText().equals(this.view.passwordFieldConfirmSignup.getText());
 			boolean arePasswordsPresent = isFieldCorrect(this.view.passwordFieldSignup) && isFieldCorrect(this.view.passwordFieldConfirmSignup);
-			
+			int nextNumberInt = Integer.parseInt(Model.userNo) + 1;
+			System.out.println("int"+nextNumberInt);
+			String nextNumberString = Integer.toString(nextNumberInt);
+			System.out.println("string"+nextNumberString);
 			if (!isPasswordsEqual) 
 			{
 				view.errorMessage("Passwords do not match. Try again.");
 			}
 			if(isFirstNameCorrect && isSurnameCorrect)
 			{
-			this.view.usernameLabelSignup.setText(this.view.firstNameTextFieldSignup.getText().toLowerCase()+"_"+this.view.surnameTextFieldSignup.getText().toLowerCase());
+			this.view.usernameLabelSignup.setText(this.view.firstNameTextFieldSignup.getText().toLowerCase()+"_"+this.view.surnameTextFieldSignup.getText().toLowerCase()+nextNumberString);
 			}
 			if(isFirstNameCorrect && isSurnameCorrect && isPasswordsEqual && arePasswordsPresent)
 			{
 				login = new Login();
-			    login.addToUserTable(this.view.usernameLabelSignup.getText(),this.view.passwordFieldConfirmSignup.getText());
+			    login.addToUserTable(this.view.usernameLabelSignup.getText()+(nextNumberString),this.view.passwordFieldConfirmSignup.getText());
 				view.clearEntries();
 			}
 		} 
@@ -364,6 +441,8 @@ public class Controller implements EventHandler {
 			login = new Login(username, this.view.passwordFieldLogin.getText());
 			if (Model.successfulLogin) {
 				view.infoMessage("Successfully logged in "+username+".");
+				userLoggedIn = username;
+				view.deleteDataButton.setVisible(true);
 				this.view.primaryStage.setScene(this.view.scene3);
 				Model.successfulLogin = false;
 				view.clearEntries();
