@@ -1,3 +1,8 @@
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.UnknownHostException;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -16,6 +21,18 @@ public class EnergyHouseApp extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		 /* final int PORT = 3;		// random large port number
+		  final ServerSocket s;
+		{
+			try {
+				s = new ServerSocket(PORT, 10, InetAddress.getLocalHost());
+			} catch (UnknownHostException e) {
+				// shouldn't happen for localhost
+			} catch (IOException e) {
+				// port taken, so app is already running
+				System.exit(0);
+			}
+		}*/
 		
 		EnergyHouseApp.primaryStage = primaryStage;
 		EnergyHouseApp.primaryStage.setTitle("Energy House Data Analysis Portal");

@@ -86,6 +86,7 @@ public class Controller implements EventHandler {
 		} 
 		else if (event.getSource() == this.view.createAccountButton) 
 		{
+			view.clearEntries();
 			this.view.primaryStage.setScene(this.view.scene4);
 		}
 		else if (event.getSource() == this.view.prevScreen) 
@@ -165,8 +166,6 @@ public class Controller implements EventHandler {
 
 			fileName = fileDialogBox.getFile();
 			directoryPath = fileDialogBox.getDirectory();
-			
-		
 			dataFile = new File(directoryPath+fileName);
 			System.out.println(directoryPath + fileName);				
 					if(dataFile.exists())
@@ -189,7 +188,7 @@ public class Controller implements EventHandler {
 
 			String formulaChosen = this.view.comboBox.getValue();
 			if (formulaChosen == null) {
-				System.out.println("You have to chose one formula");
+				view.errorMessage("You have to chose one formula");
 			} 
 			else if (formulaChosen.equals("Air to Air")) 
 			{
@@ -215,7 +214,7 @@ public class Controller implements EventHandler {
 			// dataFileSave = new File(directoryPath, fileName1+extension); NIU
 
 			if (dataFile == null) {
-				System.out.println("You have to import file first");
+				view.errorMessage("You have to import file first");
 
 			}
 
@@ -245,20 +244,8 @@ public class Controller implements EventHandler {
 							String dateString = row.getCell(j).toString().substring(0, 2); // Gets
 																							// Date
 							int dateInt = Integer.parseInt(dateString);
-
-							// String timeString = row.getCell(j).toString(); //
-							// Gets Time
-							// String timeString =
-							// row.getCell(j).toString().substring(4,9); // Gets
-							// Time
-							// int timeInt = Integer.parseInt(timeString);
-							// System.out.println(timeString);
-
-							System.out.println();
-							if (dateInt >= veryFirstCellInt + 3) {
+             				if (dateInt >= veryFirstCellInt + 3) {
 								threeDaysPassed = true;
-
-								System.out.println("<<" + dateInt + ">>");
 							}
 						}
 					}
@@ -308,7 +295,7 @@ public class Controller implements EventHandler {
 							}
 
 						} else {
-							System.out.println("Array list is empty!");
+							System.out.println("Array List is empty");
 						}
 
 						valuesAr.clear();
@@ -369,8 +356,6 @@ public class Controller implements EventHandler {
 						}
 
 					} // End of outer for.
-
-					System.out.println(directoryPath + fileName1 + extension);
 					try {
 
 						fis = new FileInputStream(new File(directoryPath +"/EnergyHouse/"+userLoggedIn+"/Results/"+ fileName1 + extension));
@@ -407,25 +392,25 @@ public class Controller implements EventHandler {
 			boolean isFirstNameCorrect = isFieldCorrect(this.view.firstNameTextFieldSignup);
 			boolean isSurnameCorrect = isFieldCorrect(this.view.surnameTextFieldSignup);
 			boolean isPasswordsEqual = this.view.passwordFieldSignup.getText().equals(this.view.passwordFieldConfirmSignup.getText());
-			boolean arePasswordsPresent = isFieldCorrect(this.view.passwordFieldSignup) && isFieldCorrect(this.view.passwordFieldConfirmSignup);
-			int nextNumberInt = Integer.parseInt(Model.userNo) + 1;
-			System.out.println("int"+nextNumberInt);
-			String nextNumberString = Integer.toString(nextNumberInt);
-			System.out.println("string"+nextNumberString);
+			boolean arePasswordsPresent = (!this.view.passwordFieldSignup.getText().isEmpty()) && (!this.view.passwordFieldConfirmSignup.getText().isEmpty());
 			if (!isPasswordsEqual) 
 			{
 				view.errorMessage("Passwords do not match. Try again.");
 			}
 			if(isFirstNameCorrect && isSurnameCorrect)
 			{
-			this.view.usernameLabelSignup.setText(this.view.firstNameTextFieldSignup.getText().toLowerCase()+"_"+this.view.surnameTextFieldSignup.getText().toLowerCase()+nextNumberString);
+			this.view.usernameLabelSignup.setText(this.view.firstNameTextFieldSignup.getText().toLowerCase()+"_"+this.view.surnameTextFieldSignup.getText().toLowerCase());
 			}
 			if(isFirstNameCorrect && isSurnameCorrect && isPasswordsEqual && arePasswordsPresent)
 			{
 				login = new Login();
-			    login.addToUserTable(this.view.usernameLabelSignup.getText()+(nextNumberString),this.view.passwordFieldConfirmSignup.getText());
-				view.clearEntries();
+			    login.addToUserTable(this.view.usernameLabelSignup.getText(),this.view.passwordFieldConfirmSignup.getText()); 
 			}
+			if(isFirstNameCorrect && isSurnameCorrect)
+			{
+			this.view.usernameLabelSignup.setText(this.view.firstNameTextFieldSignup.getText().toLowerCase()+"_"+this.view.surnameTextFieldSignup.getText().toLowerCase());
+			}
+			
 		} 
 		else if (event.getSource() == this.view.back) 
 		{

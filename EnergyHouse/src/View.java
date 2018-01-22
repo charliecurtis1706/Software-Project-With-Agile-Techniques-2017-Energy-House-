@@ -425,7 +425,7 @@ public class View {
 	{
 		firstNameTextFieldSignup.clear();
 		surnameTextFieldSignup.clear();
-	   // usernameLabelSignup.setText("auto-generated");
+	    usernameLabelSignup.setText("auto-generated");
 	    passwordFieldSignup.clear();
 		passwordFieldConfirmSignup.clear();
 		usernameFieldLogin.clear();

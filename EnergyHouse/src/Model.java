@@ -10,13 +10,14 @@ import java.sql.Statement;
 
 import javafx.application.Application;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.stage.Stage;
 import sun.misc.BASE64Encoder;
 
 public class Model {
         static boolean successfulLogin = false; 
-        static String userNo = null;
 }
 
  class Login {
@@ -61,11 +62,11 @@ public class Model {
 			}
 			catch(NoSuchAlgorithmException ex)
 			{
-				System.out.println("Unknown Algorithm.");
+				errorMessage("Unknown Algorithm.");
 			}
 			catch(UnsupportedEncodingException ex)
 			{
-				System.out.println("Unknown Encoding.");
+				errorMessage("Unknown Encoding.");
 			}
 			return hashValue;
 		}
@@ -74,12 +75,11 @@ public class Model {
 		{
 			try{
 			getConn();
-			System.out.println("Load Success");
 			}
 			catch (Exception ex)
 			{
 				ex.printStackTrace();
-				System.out.println("Load Unsuccessful");
+				errorMessage("SQL Driver Load Unsuccessful");
 			}
 		}
 		
@@ -97,7 +97,7 @@ public class Model {
 			catch (Exception ex)
 			{
 				ex.printStackTrace();
-				System.out.println("Load Unsuccessful");
+				errorMessage("Load Unsuccessful");
 			}
 		}
 		
@@ -112,13 +112,12 @@ public class Model {
 				connection.setAutoCommit(false);
 				preparedStatement.executeBatch();
 			    connection.setAutoCommit(true);
-			   // Model.userNo = 
-			System.out.println("Added Success");
+			    infoMessage("Added Success");
 			}
 			catch (Exception ex)
 			{
 				ex.printStackTrace();
-				System.out.println("Add Unsuccessful");
+				errorMessage("Add Unsuccessful");
 			}
 		}
 		
@@ -129,9 +128,9 @@ public class Model {
 				statement = connection.createStatement();
 				if(statement.executeQuery("SELECT * FROM users;") == null)
 				{
-					System.out.println("Null. Created default user; username:admin password:password");
+					infoMessage("Null. Created default user; username:admin password:password");
 					statement.executeUpdate("DROP TABLE if exists users;");
-					statement.executeUpdate("CREATE TABLE users (userid int AUTO_INCREMENT,username varchar(255), password varchar(255), PRIMARY KEY(userid));");
+					statement.executeUpdate("CREATE TABLE users (userid int AUTO_INCREMENT,username, password, PRIMARY KEY(userid));");
 					PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users values(null,?, ?);");
 					preparedStatement.setString(1, "admin");
 					preparedStatement.setString(2, encryptPassword("password","SHA-1","UTF-16"));
@@ -140,13 +139,13 @@ public class Model {
 					preparedStatement.executeBatch();
 				    connection.setAutoCommit(true);
 				}
-				System.out.println("Database connected!");
+			//	System.out.println("Database connected!");
 			      ResultSet resultSet = statement.executeQuery("SELECT * FROM users;");
 			        while (resultSet.next()) {
-			        	Model.userNo = resultSet.getString("userid");
-			        	//System.out.println("username = " + resultSet.getString("userid"));
-			            System.out.println("username = " + resultSet.getString("username")+Model.userNo);
-			            System.out.println("password = " + resultSet.getString("password"));
+			        	//Model.userNo = resultSet.getString("userid");
+			        	System.out.println("userid = " + resultSet.getString("userid"));
+			           System.out.println("username = " + resultSet.getString("username"));
+			           System.out.println("password = " + resultSet.getString("password"));
 			        }
 			       // resultSet.close();
 			      //  connection.close();
@@ -157,36 +156,29 @@ public class Model {
 			}
 			catch(SQLException ex)
 			{
-				  System.out.println("SQLException: " + ex.getMessage());
-				  System.out.println("SQLState: " + ex.getSQLState());
-				  System.out.println("VendorError: " + ex.getErrorCode());
+				errorMessage("SQLException: " + ex.getMessage());
+				errorMessage("SQLState: " + ex.getSQLState());
+				errorMessage("VendorError: " + ex.getErrorCode());
 			}
 			
-		}
-		/*public static String getNextUserNo()
-		{
-			try
-			{
-				statement = connection.createStatement();
-			      ResultSet resultSet = statement.executeQuery("SELECT * FROM users;");
-			        while (resultSet.next()) {
-			        	Model.userNo = resultSet.getString("userid");
-			            System.out.println("username = " + resultSet.getString("username")+Model.userNo);
-			            System.out.println("password = " + resultSet.getString("password"));
-			        }
-			}
-			catch(SQLException ex)
-			{
-				  System.out.println("SQLException: " + ex.getMessage());
-				  System.out.println("SQLState: " + ex.getSQLState());
-				  System.out.println("VendorError: " + ex.getErrorCode());
-			}
-			int nextNumberInt = Integer.parseInt(Model.userNo) + 1;
-			String nextNumberString = Integer.toString(nextNumberInt);
-			return nextNumberString;
+		}		
+		public static void errorMessage(String message) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error!");
+			alert.setHeaderText(null);
+			alert.setContentText(message);
+			alert.showAndWait();
 		}
 
-*/
-
-	
+		public static void infoMessage(String message) {
+			Alert alertConfirmation = new Alert(AlertType.CONFIRMATION);
+			alertConfirmation.getButtonTypes().clear();
+			ButtonType ok = new ButtonType("OK", ButtonData.OK_DONE);
+			alertConfirmation.getButtonTypes().add(ok);
+			alertConfirmation.setTitle("Confirmation");
+			alertConfirmation.setHeaderText(null);
+			alertConfirmation.setContentText(message);
+			alertConfirmation.showAndWait();
+		
+		}
 }
